@@ -22,32 +22,26 @@
 html,body{background:var(--bg);color:var(--tx);font-family:'Noto Sans KR',sans-serif;}
 body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 .app{max-width:520px;margin:0 auto;padding:0 16px 100px;}
-
 .hdr{display:flex;align-items:flex-end;justify-content:space-between;padding:24px 0 16px;border-bottom:.5px solid var(--bd2);}
 .hdr h1{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--ac);letter-spacing:.2em;}
 .hdr p{font-size:10px;color:var(--tx3);letter-spacing:.15em;margin-top:3px;}
 .badge{font-size:13px;padding:6px 14px;border:.5px solid var(--bd3);border-radius:20px;color:var(--tx3);}
-
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--ac);display:inline-block;margin-right:6px;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.2;}}
 .tbl-btn{width:100%;margin:16px 0 14px;padding:16px 18px;background:var(--bg2);border:.5px solid var(--bd2);border-radius:14px;color:var(--tx2);font-size:15px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
 .tbl-btn.on{border-color:var(--ac);color:var(--ac);}
-
-/* 카테고리 그리드 버튼 */
 .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
-.cat-btn{padding:14px 8px;background:var(--bg2);border:.5px solid var(--bd);border-radius:12px;color:var(--tx3);font-size:13px;font-weight:400;cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center;line-height:1.3;transition:all .15s;}
+.cat-btn{padding:14px 8px;background:var(--bg2);border:.5px solid var(--bd);border-radius:12px;color:var(--tx3);font-size:13px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center;line-height:1.3;transition:all .15s;}
 .cat-btn.on{background:var(--ac);color:#0a0a0a;border-color:var(--ac);font-weight:500;}
 .cat-btn:active{opacity:.75;}
-
-/* 메뉴 영역 */
 .menu-area{min-height:100px;}
 .cat-sub{font-size:11px;color:var(--tx3);margin-bottom:10px;}
-
 .mi{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg2);border:.5px solid var(--bd);border-radius:14px;margin-bottom:8px;gap:10px;transition:all .15s;}
 .mi.on{background:var(--bg3);border-color:var(--bd3);}
 .mi-info{flex:1;min-width:0;}
 .mi-name{font-size:15px;color:var(--tx);line-height:1.4;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
 .mi-note{font-size:11px;color:var(--tx3);margin-top:3px;}
 .mi-price{font-size:14px;color:var(--tx2);margin-top:4px;font-weight:500;}
-
 .tag{font-size:10px;padding:2px 7px;border-radius:4px;font-weight:500;flex-shrink:0;}
 .tb{background:rgba(210,110,110,.15);color:var(--red);}
 .tl{background:rgba(110,190,110,.15);color:var(--gr);}
@@ -55,22 +49,18 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 .ta{background:rgba(210,110,170,.12);color:var(--pk);}
 .ts{background:rgba(255,255,255,.06);color:var(--tx3);}
 .tset{background:rgba(110,160,210,.15);color:var(--bl);}
-
 .qc{display:flex;align-items:center;gap:10px;flex-shrink:0;}
 .qb{width:36px;height:36px;border:.5px solid var(--bd2);border-radius:50%;background:var(--bg3);color:var(--tx);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .qb:active{background:var(--bg4);}
 .qn{font-size:16px;font-weight:500;min-width:20px;text-align:center;color:var(--tx);}
-
 .set-btn{padding:8px 16px;border:.5px solid var(--bd3);border-radius:20px;background:transparent;color:var(--tx2);font-size:13px;cursor:pointer;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;}
 .slc-wrap{margin-top:6px;padding:10px 14px;background:var(--bg3);border-radius:12px;border:.5px solid var(--bd);}
 .sl-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--tx2);padding:4px 0;}
 .sl-rm{background:transparent;border:none;color:var(--tx3);font-size:20px;cursor:pointer;line-height:1;}
-
 .memo-s{margin-top:16px;}
 .memo-s label{font-size:11px;color:var(--tx3);display:block;margin-bottom:6px;letter-spacing:.1em;}
 .memo-s textarea{width:100%;padding:12px 14px;font-size:14px;border:.5px solid var(--bd);border-radius:14px;background:var(--bg2);color:var(--tx);resize:none;height:56px;font-family:'Noto Sans KR',sans-serif;}
 .memo-s textarea:focus{outline:none;border-color:var(--bd3);}
-
 .summ{margin-top:16px;padding:16px 18px;background:var(--bg2);border:.5px solid var(--bd2);border-radius:14px;}
 .sr{display:flex;justify-content:space-between;font-size:13px;color:var(--tx2);margin-bottom:7px;gap:8px;}
 .sr span:first-child{flex:1;min-width:0;}
@@ -79,15 +69,13 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 .stot{display:flex;justify-content:space-between;align-items:baseline;}
 .stot-lbl{font-size:12px;color:var(--tx3);letter-spacing:.1em;}
 .stot-val{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:var(--ac);}
-
 .act{display:flex;gap:10px;margin-top:14px;}
 .btn-r{flex:1;padding:16px;border:.5px solid var(--bd2);border-radius:14px;background:transparent;color:var(--tx3);font-size:15px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
 .btn-c{flex:2;padding:16px;border:none;border-radius:14px;background:var(--ac);color:#0a0a0a;font-size:15px;font-weight:500;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
 .btn-c:active{opacity:.8;}
-
 .log{margin-top:28px;border-top:.5px solid var(--bd);padding-top:18px;}
 .log-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
-.log-ttl{font-size:11px;color:var(--tx3);letter-spacing:.15em;text-transform:uppercase;}
+.log-ttl{font-size:11px;color:var(--tx3);letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;}
 .log-clr{font-size:11px;color:var(--tx3);padding:4px 10px;border:.5px solid var(--bd);border-radius:10px;background:transparent;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
 .oc{padding:14px 16px;border:.5px solid var(--bd);background:var(--bg2);border-radius:14px;margin-bottom:8px;cursor:pointer;}
 .oh{display:flex;justify-content:space-between;margin-bottom:6px;}
@@ -96,7 +84,6 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 .oi{font-size:13px;color:var(--tx2);line-height:1.7;}
 .op{font-size:15px;color:var(--ac);text-align:right;margin-top:6px;font-weight:500;}
 .emp{font-size:13px;color:var(--tx3);text-align:center;padding:28px 0;}
-
 .mover{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:flex-start;justify-content:center;padding:20px 16px;z-index:200;overflow-y:auto;}
 .mbox{background:var(--bg2);border:.5px solid var(--bd2);border-radius:16px;padding:20px;width:100%;max-width:480px;}
 .mtit{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--ac);margin-bottom:4px;}
@@ -109,7 +96,6 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 .tgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:14px 0;}
 .tgb{padding:14px 0;font-size:16px;font-weight:500;border:.5px solid var(--bd);border-radius:10px;background:var(--bg3);color:var(--tx2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
 .tgb.on{background:var(--ac);color:#0a0a0a;border-color:var(--ac);}
-
 .dbox{background:var(--bg2);border:.5px solid var(--bd2);border-radius:16px;padding:30px 22px;width:100%;max-width:480px;}
 .dt{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:300;color:var(--ac);text-align:center;letter-spacing:.05em;margin-bottom:6px;}
 .dti{font-size:13px;color:var(--tx3);text-align:center;margin-bottom:22px;}
@@ -129,36 +115,27 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 <div class="app">
   <div class="hdr">
     <div><h1>MERLOT</h1><p>ITALIAN RESTAURANT</p></div>
-    <div class="badge" id="badge">0건</div>
+    <div class="badge" id="badge"><span class="sync-dot"></span>0건</div>
   </div>
-
   <button class="tbl-btn" id="tbl-btn" onclick="openTbl()">
     <span>🪑 <span id="tbl-cur">테이블 선택</span></span>
     <span style="color:var(--tx3);font-size:13px;">▼</span>
   </button>
-
-  <!-- 카테고리 그리드 -->
   <div class="cat-grid" id="cat-grid"></div>
-
-  <!-- 선택된 카테고리 메뉴 -->
   <div class="menu-area" id="menu-area"></div>
-
   <div class="memo-s"><label>MEMO</label><textarea id="memo" placeholder="맵기 조절, 알레르기 등"></textarea></div>
-
   <div class="summ" id="summ" style="display:none;">
     <div id="summ-rows"></div>
     <hr class="sdiv">
     <div class="stot"><span class="stot-lbl">TOTAL</span><span class="stot-val" id="stot">0원</span></div>
   </div>
-
   <div class="act">
     <button class="btn-r" onclick="resetOrder()">초기화</button>
     <button class="btn-c" onclick="confirmOrder()">주문 확정</button>
   </div>
-
   <div class="log">
     <div class="log-hdr">
-      <div class="log-ttl">오늘 주문 내역 · 탭하면 확대</div>
+      <div class="log-ttl"><span class="sync-dot"></span>전체 주문 내역 (실시간 공유)</div>
       <button class="log-clr" onclick="clearOrders()">전체 삭제</button>
     </div>
     <div id="log-list"><div class="emp">주문이 없습니다</div></div>
@@ -166,10 +143,20 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 </div>
 <div id="mroot"></div>
 
-<script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, push, onValue, remove, get } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
+// Firebase 설정
+const app = initializeApp({
+  apiKey: "AIzaSyDummy-not-needed-for-rtdb",
+  databaseURL: "https://merlot-9cb09-default-rtdb.asia-southeast1.firebasedatabase.app"
+});
+const db = getDatabase(app);
+const ordersRef = ref(db, 'orders');
+
 const SET_P=59000,STEAK_ID='s1',STEAK_P=41000;
 const BUNDLE_IDS=['p0','p1','p3','p4','p5','r1','r2','r3','r4','r5'];
-
 const PASTA_O=[
   {n:'봉골레',p:20000},{n:'멜롯 크림 파스타',p:19000},{n:'멜롯 토마토 파스타',p:20000},
   {n:'새우 크림 파스타',p:19000},{n:'새우 크림 들깨 파스타',p:19000},{n:'오징어 먹물 파스타',p:19000},
@@ -180,7 +167,6 @@ const RISO_O=[
   {n:'새우 크림 들깨 리소토',p:19000},{n:'오징어 먹물 리소토',p:19000},
   {n:'멜롯 토마토 로제 리소토',p:20000},
 ];
-
 const MENUS=[
   {cat:'시그니처',sub:'',items:[
     {id:'s1',n:'와규 큐브 스테이크',p:41000,t:'b',nt:'230g'},
@@ -236,14 +222,31 @@ const MENUS=[
   ]},
 ];
 
-const LS='merlot_orders';
 let sel=null,qty={},setO=[],orders=[],curCat=0;
 MENUS.forEach(c=>c.items.forEach(m=>qty[m.id]=0));
 const all=()=>MENUS.flatMap(c=>c.items);
 const fi=id=>all().find(m=>m.id===id);
 
-function loadOrders(){try{const d=localStorage.getItem(LS);if(d)orders=JSON.parse(d);}catch(e){}}
-function saveOrders(){try{localStorage.setItem(LS,JSON.stringify(orders));}catch(e){}}
+// Firebase 실시간 동기화
+onValue(ordersRef, (snapshot)=>{
+  orders=[];
+  if(snapshot.exists()){
+    const data=snapshot.val();
+    // 최신순 정렬
+    orders=Object.entries(data)
+      .map(([key,val])=>({...val,_key:key}))
+      .sort((a,b)=>b.id-a.id);
+  }
+  document.getElementById('badge').innerHTML=`<span class="sync-dot"></span>${orders.length}건`;
+  renderLog();
+});
+
+async function saveOrder(order){
+  await push(ordersRef, order);
+}
+async function deleteAllOrders(){
+  await remove(ordersRef);
+}
 
 function calcB(){
   let sl=qty[STEAK_ID]||0;
@@ -260,27 +263,21 @@ function calcB(){
 }
 
 function buildCatGrid(){
-  const tL={b:'BEST',l:'한정',f:'무료',a:'에이드',s:'사이드',set:'세트'};
-  const tC={b:'tb',l:'tl',f:'tf',a:'ta',s:'ts',set:'tset'};
   const grid=document.getElementById('cat-grid');
   grid.innerHTML=MENUS.map((c,i)=>`<button class="cat-btn${i===curCat?' on':''}" onclick="selectCat(${i})">${c.cat}</button>`).join('');
-  renderMenuArea(tL,tC);
+  renderMenuArea();
 }
-
-function selectCat(i){
+window.selectCat=function(i){
   curCat=i;
   document.querySelectorAll('.cat-btn').forEach((b,j)=>b.className='cat-btn'+(j===i?' on':''));
+  renderMenuArea();
+};
+function renderMenuArea(){
   const tL={b:'BEST',l:'한정',f:'무료',a:'에이드',s:'사이드',set:'세트'};
   const tC={b:'tb',l:'tl',f:'tf',a:'ta',s:'ts',set:'tset'};
-  renderMenuArea(tL,tC);
-  // 상단 스크롤
-  document.getElementById('menu-area').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-function renderMenuArea(tL,tC){
   const c=MENUS[curCat];
   let html='';
-  if(c.sub) html+=`<div class="cat-sub">${c.sub}</div>`;
+  if(c.sub)html+=`<div class="cat-sub">${c.sub}</div>`;
   c.items.forEach(m=>{
     const pd=m.t==='f'?'<span class="tag tf">무료</span>':m.t==='a'?`<span style="color:var(--pk);font-size:13px;">+3,500원</span>`:m.p.toLocaleString()+'원';
     const th=m.t&&tC[m.t]?`<span class="tag ${tC[m.t]}">${tL[m.t]}</span>`:'';
@@ -294,35 +291,36 @@ function renderMenuArea(tL,tC){
   renderSetList();
 }
 
-function openTbl(){
+window.openTbl=function(){
   let h=`<div class="mover" onclick="closeM(event)"><div class="mbox" onclick="event.stopPropagation()"><div class="mtit">테이블 선택</div><div class="mdesc">번호를 선택하세요</div><div class="tgrid">`;
   for(let i=1;i<=30;i++)h+=`<button class="tgb${sel===i?' on':''}" onclick="pickT(${i})">${i}</button>`;
   h+=`</div><button class="mcls" onclick="closeM()">취소</button></div></div>`;
   document.getElementById('mroot').innerHTML=h;
-}
-function pickT(n){sel=n;document.getElementById('tbl-cur').textContent=n+'번 테이블';document.getElementById('tbl-btn').className='tbl-btn on';closeM();}
+};
+window.pickT=function(n){sel=n;document.getElementById('tbl-cur').textContent=n+'번 테이블';document.getElementById('tbl-btn').className='tbl-btn on';closeM();};
 
-function openSet(){
+window.openSet=function(){
   const ro=o=>`<button class="mopt" onclick="addSet('${o.n}')"><span>${o.n}</span><span class="mopt-p">${o.p.toLocaleString()}원</span></button>`;
   document.getElementById('mroot').innerHTML=`<div class="mover" onclick="closeM(event)"><div class="mbox" onclick="event.stopPropagation()"><div class="mtit">큐브스테이크 세트</div><div class="mdesc">파스타 또는 리소토 선택 — 59,000원 고정</div><div class="msec">파스타</div>${PASTA_O.map(ro).join('')}<div class="msec">리소토</div>${RISO_O.map(ro).join('')}<button class="mcls" onclick="closeM()">취소</button></div></div>`;
-}
-function addSet(n){setO.push({n});closeM();renderSetList();updSumm();}
-function removeSet(i){setO.splice(i,1);renderSetList();updSumm();}
+};
+window.addSet=function(n){setO.push({n});closeM();renderSetList();updSumm();};
+window.removeSet=function(i){setO.splice(i,1);renderSetList();updSumm();};
 function renderSetList(){
   const e=document.getElementById('slc');if(!e)return;
   e.innerHTML=setO.length?`<div class="slc-wrap">${setO.map((s,i)=>`<div class="sl-row"><span>· ${s.n}</span><button class="sl-rm" onclick="removeSet(${i})">×</button></div>`).join('')}</div>`:'';
 }
 function closeM(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('mroot').innerHTML='';}
+window.closeM=closeM;
 
-function cq(id,d){
+window.cq=function(id,d){
   qty[id]=Math.max(0,qty[id]+d);
   const n=document.getElementById('q-'+id);if(n)n.textContent=qty[id];
   const e=document.getElementById('mi-'+id);if(e)e.className='mi'+(qty[id]>0?' on':'');
   updSumm();
-}
+};
 
 function updSumm(){
-  const{bundles,steakLeft,prLeft}=calcB();
+  const{bundles,steakLeft}=calcB();
   const bundleSet=new Set([...BUNDLE_IDS,STEAK_ID]);
   const others=all().filter(m=>qty[m.id]>0&&!bundleSet.has(m.id));
   let tot=bundles.length*SET_P+setO.length*SET_P;
@@ -343,11 +341,11 @@ function updSumm(){
   document.getElementById('stot').textContent=tot.toLocaleString()+'원';
 }
 
-function confirmOrder(){
+window.confirmOrder=async function(){
   if(!sel){alert('테이블을 선택해 주세요.');return;}
   const has=Object.values(qty).some(v=>v>0)||setO.length>0;
   if(!has){alert('메뉴를 선택해 주세요.');return;}
-  const{bundles,steakLeft,prLeft}=calcB();
+  const{bundles,steakLeft}=calcB();
   const bundleSet=new Set([...BUNDLE_IDS,STEAK_ID]);
   const others=all().filter(m=>qty[m.id]>0&&!bundleSet.has(m.id));
   const memo=document.getElementById('memo').value;
@@ -363,38 +361,35 @@ function confirmOrder(){
   others.forEach(m=>ia.push({n:m.n,q:qty[m.id],up:m.p,fr:m.t==='f'}));
   const now=new Date();
   const ti=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
-  orders.unshift({id:Date.now(),table:sel,items:ia,memo,total:tot,time:ti});
-  saveOrders();
-  document.getElementById('badge').textContent=orders.length+'건';
-  renderLog();resetOrder();
-}
+  await saveOrder({id:Date.now(),table:sel,items:ia,memo,total:tot,time:ti});
+  resetOrder();
+};
 
 function renderLog(){
   const e=document.getElementById('log-list');
   if(!orders.length){e.innerHTML='<div class="emp">주문이 없습니다</div>';return;}
   e.innerHTML=orders.map((o,i)=>`<div class="oc" onclick="openDet(${i})"><div class="oh"><span class="ot">${o.table}번 테이블</span><span class="oti">${o.time}</span></div><div class="oi">${o.items.map(x=>x.n+' × '+x.q).join('<br>')}</div><div class="op">${o.total.toLocaleString()}원</div></div>`).join('');
 }
-function openDet(i){
+window.openDet=function(i){
   const o=orders[i];
   document.getElementById('mroot').innerHTML=`<div class="mover" onclick="closeM(event)"><div class="dbox" onclick="event.stopPropagation()"><div class="dt">${o.table}번 테이블</div><div class="dti">${o.time}</div><div class="ditems">${o.items.map(x=>`<div class="dirow"><span class="diname">${x.n} × ${x.q}</span><span class="diprice">${x.fr?'무료':(x.up*x.q).toLocaleString()+'원'}</span></div>`).join('')}</div>${o.memo?`<div class="dmemo">📝 ${o.memo}</div>`:''}<div class="dtrow"><span class="dtlbl">TOTAL</span><span class="dtval">${o.total.toLocaleString()}원</span></div><button class="dcls" onclick="closeM()">닫기</button></div></div>`;
-}
-function clearOrders(){
+};
+
+window.clearOrders=async function(){
   if(!orders.length)return;
-  if(confirm('주문 내역을 전부 삭제할까요?')){orders=[];saveOrders();renderLog();document.getElementById('badge').textContent='0건';}
-}
-function resetOrder(){
+  if(confirm('주문 내역을 전부 삭제할까요?')){await deleteAllOrders();}
+};
+
+window.resetOrder=function(){
   all().forEach(m=>{qty[m.id]=0;});
   setO=[];sel=null;
   document.getElementById('tbl-cur').textContent='테이블 선택';
   document.getElementById('tbl-btn').className='tbl-btn';
   document.getElementById('memo').value='';
   buildCatGrid();updSumm();
-}
+};
 
 buildCatGrid();
-loadOrders();
-renderLog();
-document.getElementById('badge').textContent=orders.length+'건';
 </script>
 </body>
 </html>
