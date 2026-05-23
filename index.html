@@ -32,11 +32,11 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 .lock-dot.filled{background:var(--ac);border-color:var(--ac);}
 .lock-dot.error{background:rgba(210,80,80,.6);border-color:rgba(210,80,80,.6);}
 .lock-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;max-width:280px;}
-.kbtn{padding:20px 0;background:var(--bg2);border:.5px solid var(--bd2);border-radius:14px;color:var(--tx);font-size:22px;font-weight:400;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .1s;}
-.kbtn:active{background:var(--bg3);transform:scale(0.95);}
+.kbtn{padding:20px 0;background:var(--bg2);border:.5px solid var(--bd2);border-radius:14px;color:var(--tx);font-size:22px;font-weight:400;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .1s;-webkit-tap-highlight-color:rgba(212,180,131,.2);}
+.kbtn:active{background:var(--bg3);}
 .kbtn.del{font-size:18px;color:var(--tx3);}
 .kbtn.empty{background:transparent;border-color:transparent;pointer-events:none;}
-.lock-error{font-size:12px;color:rgba(210,80,80,.8);margin-top:16px;min-height:18px;}
+.lock-error{font-size:13px;color:rgba(210,80,80,.8);margin-top:20px;min-height:20px;text-align:center;}
 
 /* 메인 */
 .hdr{display:flex;align-items:flex-end;justify-content:space-between;padding:24px 0 16px;border-bottom:.5px solid var(--bd2);}
@@ -50,10 +50,9 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
 .cat-btn{padding:14px 8px;background:var(--bg2);border:.5px solid var(--bd);border-radius:12px;color:var(--tx3);font-size:13px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;text-align:center;line-height:1.3;transition:all .15s;}
 .cat-btn.on{background:var(--ac);color:#0a0a0a;border-color:var(--ac);font-weight:500;}
-.cat-btn:active{opacity:.75;}
 .menu-area{min-height:100px;}
 .cat-sub{font-size:11px;color:var(--tx3);margin-bottom:10px;}
-.mi{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg2);border:.5px solid var(--bd);border-radius:14px;margin-bottom:8px;gap:10px;transition:all .15s;}
+.mi{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg2);border:.5px solid var(--bd);border-radius:14px;margin-bottom:8px;gap:10px;}
 .mi.on{background:var(--bg3);border-color:var(--bd3);}
 .mi-info{flex:1;min-width:0;}
 .mi-name{font-size:15px;color:var(--tx);line-height:1.4;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
@@ -77,7 +76,6 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 .memo-s{margin-top:16px;}
 .memo-s label{font-size:11px;color:var(--tx3);display:block;margin-bottom:6px;letter-spacing:.1em;}
 .memo-s textarea{width:100%;padding:12px 14px;font-size:14px;border:.5px solid var(--bd);border-radius:14px;background:var(--bg2);color:var(--tx);resize:none;height:56px;font-family:'Noto Sans KR',sans-serif;}
-.memo-s textarea:focus{outline:none;border-color:var(--bd3);}
 .summ{margin-top:16px;padding:16px 18px;background:var(--bg2);border:.5px solid var(--bd2);border-radius:14px;}
 .sr{display:flex;justify-content:space-between;font-size:13px;color:var(--tx2);margin-bottom:7px;gap:8px;}
 .sr span:first-child{flex:1;min-width:0;}
@@ -100,8 +98,8 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 .oti{font-size:12px;color:var(--tx3);}
 .oi{font-size:13px;color:var(--tx2);line-height:1.7;}
 .op{font-size:15px;color:var(--ac);text-align:right;margin-top:6px;font-weight:500;}
-.del-btn{background:transparent;border:.5px solid var(--bd2);border-radius:8px;color:var(--tx3);font-size:11px;padding:4px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-left:8px;flex-shrink:0;}
-.del-btn:active{background:rgba(210,80,80,.15);border-color:rgba(210,80,80,.4);color:var(--red);}
+.del-btn{background:transparent;border:.5px solid var(--bd2);border-radius:8px;color:var(--tx3);font-size:11px;padding:4px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-left:8px;}
+.del-btn:active{background:rgba(210,80,80,.15);color:var(--red);}
 .emp{font-size:13px;color:var(--tx3);text-align:center;padding:28px 0;}
 .mover{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:flex-start;justify-content:center;padding:20px 16px;z-index:200;overflow-y:auto;}
 .mbox{background:var(--bg2);border:.5px solid var(--bd2);border-radius:16px;padding:20px;width:100%;max-width:480px;}
@@ -193,68 +191,69 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 </div>
 <div id="mroot"></div>
 
-<script>
-// 잠금 로직
-const PW = '1106';
-let kVal = '';
-
-function kInput(n) {
-  if(kVal.length >= 4) return;
-  kVal += n;
-  updateDots();
-  if(kVal.length === 4) {
-    setTimeout(()=>{
-      if(kVal === PW) {
-        document.getElementById('lock-screen').style.display = 'none';
-        document.getElementById('main-app').style.display = 'block';
-        sessionStorage.setItem('merlot_auth','1');
-        initApp();
-      } else {
-        document.querySelectorAll('.lock-dot').forEach(d=>d.className='lock-dot error');
-        document.getElementById('lock-error').textContent = '비밀번호가 틀렸습니다';
-        setTimeout(()=>{
-          kVal='';
-          updateDots();
-          document.getElementById('lock-error').textContent='';
-        }, 800);
-      }
-    }, 150);
-  }
-}
-function kDel() {
-  kVal = kVal.slice(0,-1);
-  updateDots();
-}
-function updateDots() {
-  for(let i=0;i<4;i++){
-    const d=document.getElementById('d'+i);
-    d.className='lock-dot'+(i<kVal.length?' filled':'');
-  }
-}
-
-// 세션 유지 (한 번 로그인하면 탭 닫기 전까지 유지)
-if(sessionStorage.getItem('merlot_auth')==='1'){
-  document.getElementById('lock-screen').style.display='none';
-  document.getElementById('main-app').style.display='block';
-  initApp();
-}
-
-function initApp() {
-</script>
-
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getDatabase, ref, push, onValue, remove } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-window._firebaseReady = async function() {
-  const app = initializeApp({
-    apiKey: "AIzaSyDummy-not-needed-for-rtdb",
-    databaseURL: "https://merlot-9cb09-default-rtdb.asia-southeast1.firebasedatabase.app"
-  });
-  const db = getDatabase(app);
-  const ordersRef = ref(db, 'orders');
+const PW = '1106';
+let kVal = '';
+let appInited = false;
 
-  const SET_P=59000,STEAK_ID='s1',STEAK_P=41000;
+// Firebase
+const fireApp = initializeApp({
+  apiKey: "AIzaSyDummy-not-needed-for-rtdb",
+  databaseURL: "https://merlot-9cb09-default-rtdb.asia-southeast1.firebasedatabase.app"
+});
+const db = getDatabase(fireApp);
+const ordersRef = ref(db, 'orders');
+
+// 잠금
+window.kInput = function(n) {
+  if(kVal.length >= 4) return;
+  kVal += n;
+  updateDots();
+  if(kVal.length === 4) {
+    setTimeout(() => {
+      if(kVal === PW) {
+        document.getElementById('lock-screen').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        sessionStorage.setItem('merlot_auth', '1');
+        if(!appInited) { appInited = true; initApp(); }
+      } else {
+        for(let i=0;i<4;i++) document.getElementById('d'+i).className='lock-dot error';
+        document.getElementById('lock-error').textContent = '비밀번호가 틀렸습니다';
+        setTimeout(() => {
+          kVal = '';
+          updateDots();
+          document.getElementById('lock-error').textContent = '';
+        }, 800);
+      }
+    }, 150);
+  }
+};
+
+window.kDel = function() {
+  kVal = kVal.slice(0, -1);
+  updateDots();
+};
+
+function updateDots() {
+  for(let i=0;i<4;i++) {
+    document.getElementById('d'+i).className = 'lock-dot' + (i < kVal.length ? ' filled' : '');
+  }
+}
+
+// 세션 유지
+if(sessionStorage.getItem('merlot_auth') === '1') {
+  document.getElementById('lock-screen').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  appInited = true;
+  initApp();
+}
+
+// 앱 초기화
+function initApp() {
+  const SET_P=59000, STEAK_ID='s1', STEAK_P=41000;
   const BUNDLE_IDS=['p0','p1','p3','p4','p5','r1','r2','r3','r4','r5'];
   const PASTA_O=[
     {n:'봉골레',p:20000},{n:'멜롯 크림 파스타',p:19000},{n:'멜롯 토마토 파스타',p:20000},
@@ -321,23 +320,21 @@ window._firebaseReady = async function() {
     ]},
   ];
 
-  let sel=null,qty={},setO=[],orders=[],curCat=0;
+  let sel=null, qty={}, setO=[], orders=[], curCat=0;
   MENUS.forEach(c=>c.items.forEach(m=>qty[m.id]=0));
   const all=()=>MENUS.flatMap(c=>c.items);
   const fi=id=>all().find(m=>m.id===id);
 
-  onValue(ordersRef,(snapshot)=>{
+  onValue(ordersRef,(snap)=>{
     orders=[];
-    if(snapshot.exists()){
-      orders=Object.entries(snapshot.val()).map(([k,v])=>({...v,_key:k})).sort((a,b)=>b.id-a.id);
-    }
+    if(snap.exists()) orders=Object.entries(snap.val()).map(([k,v])=>({...v,_key:k})).sort((a,b)=>b.id-a.id);
     document.getElementById('badge').innerHTML=`<span class="sync-dot"></span>${orders.length}건`;
     renderLog();
   });
 
   function calcB(){
     let sl=qty[STEAK_ID]||0;
-    if(!sl)return{bundles:[],steakLeft:0};
+    if(!sl) return{bundles:[],steakLeft:0};
     const prl={};BUNDLE_IDS.forEach(id=>{if(qty[id]>0)prl[id]=qty[id];});
     const bundles=[];
     for(const id of BUNDLE_IDS){if(!prl[id])continue;while(sl>0&&prl[id]>0){bundles.push({choice:fi(id).n,id});sl--;prl[id]--;}if(!sl)break;}
@@ -348,25 +345,31 @@ window._firebaseReady = async function() {
     document.getElementById('cat-grid').innerHTML=MENUS.map((c,i)=>`<button class="cat-btn${i===curCat?' on':''}" onclick="selectCat(${i})">${c.cat}</button>`).join('');
     renderMenuArea();
   }
-  window.selectCat=function(i){curCat=i;document.querySelectorAll('.cat-btn').forEach((b,j)=>b.className='cat-btn'+(j===i?' on':''));renderMenuArea();};
+
+  window.selectCat=function(i){
+    curCat=i;
+    document.querySelectorAll('.cat-btn').forEach((b,j)=>b.className='cat-btn'+(j===i?' on':''));
+    renderMenuArea();
+  };
 
   function renderMenuArea(){
     const tL={b:'BEST',l:'한정',f:'무료',a:'에이드',s:'사이드',set:'세트'};
     const tC={b:'tb',l:'tl',f:'tf',a:'ta',s:'ts',set:'tset'};
-    const c=MENUS[curCat];let html='';
-    if(c.sub)html+=`<div class="cat-sub">${c.sub}</div>`;
+    const c=MENUS[curCat]; let html='';
+    if(c.sub) html+=`<div class="cat-sub">${c.sub}</div>`;
     c.items.forEach(m=>{
       const pd=m.t==='f'?'<span class="tag tf">무료</span>':m.t==='a'?`<span style="color:var(--pk);font-size:13px;">+3,500원</span>`:m.p.toLocaleString()+'원';
       const th=m.t&&tC[m.t]?`<span class="tag ${tC[m.t]}">${tL[m.t]}</span>`:'';
-      if(m.id==='s2'){html+=`<div class="mi" id="mi-s2"><div class="mi-info"><div class="mi-name">${m.n}<span class="tag tset">세트</span></div><div class="mi-note">${m.nt||''}</div><div class="mi-price">${pd} 고정</div></div><button class="set-btn" onclick="openSet()">+ 추가</button></div><div id="slc"></div>`;}
-      else{html+=`<div class="mi${qty[m.id]>0?' on':''}" id="mi-${m.id}"><div class="mi-info"><div class="mi-name">${m.n}${th}</div>${m.nt?`<div class="mi-note">${m.nt}</div>`:''}<div class="mi-price">${pd}</div></div><div class="qc"><button class="qb" onclick="cq('${m.id}',-1)">−</button><span class="qn" id="q-${m.id}">${qty[m.id]}</span><button class="qb" onclick="cq('${m.id}',1)">+</button></div></div>`;}
+      if(m.id==='s2') html+=`<div class="mi" id="mi-s2"><div class="mi-info"><div class="mi-name">${m.n}<span class="tag tset">세트</span></div><div class="mi-note">${m.nt||''}</div><div class="mi-price">${pd} 고정</div></div><button class="set-btn" onclick="openSet()">+ 추가</button></div><div id="slc"></div>`;
+      else html+=`<div class="mi${qty[m.id]>0?' on':''}" id="mi-${m.id}"><div class="mi-info"><div class="mi-name">${m.n}${th}</div>${m.nt?`<div class="mi-note">${m.nt}</div>`:''}<div class="mi-price">${pd}</div></div><div class="qc"><button class="qb" onclick="cq('${m.id}',-1)">−</button><span class="qn" id="q-${m.id}">${qty[m.id]}</span><button class="qb" onclick="cq('${m.id}',1)">+</button></div></div>`;
     });
-    document.getElementById('menu-area').innerHTML=html;renderSetList();
+    document.getElementById('menu-area').innerHTML=html;
+    renderSetList();
   }
 
   window.openTbl=function(){
     let h=`<div class="mover" onclick="closeM(event)"><div class="mbox" onclick="event.stopPropagation()"><div class="mtit">테이블 선택</div><div class="mdesc">번호를 선택하세요</div><div class="tgrid">`;
-    for(let i=1;i<=30;i++)h+=`<button class="tgb${sel===i?' on':''}" onclick="pickT(${i})">${i}</button>`;
+    for(let i=1;i<=30;i++) h+=`<button class="tgb${sel===i?' on':''}" onclick="pickT(${i})">${i}</button>`;
     h+=`</div><button class="mcls" onclick="closeM()">취소</button></div></div>`;
     document.getElementById('mroot').innerHTML=h;
   };
@@ -377,7 +380,10 @@ window._firebaseReady = async function() {
   };
   window.addSet=function(n){setO.push({n});closeM();renderSetList();updSumm();};
   window.removeSet=function(i){setO.splice(i,1);renderSetList();updSumm();};
-  function renderSetList(){const e=document.getElementById('slc');if(!e)return;e.innerHTML=setO.length?`<div class="slc-wrap">${setO.map((s,i)=>`<div class="sl-row"><span>· ${s.n}</span><button class="sl-rm" onclick="removeSet(${i})">×</button></div>`).join('')}</div>`:'';}
+  function renderSetList(){
+    const e=document.getElementById('slc');if(!e)return;
+    e.innerHTML=setO.length?`<div class="slc-wrap">${setO.map((s,i)=>`<div class="sl-row"><span>· ${s.n}</span><button class="sl-rm" onclick="removeSet(${i})">×</button></div>`).join('')}</div>`:'';
+  }
   function closeM(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('mroot').innerHTML='';}
   window.closeM=closeM;
 
@@ -393,7 +399,7 @@ window._firebaseReady = async function() {
     const bSet=new Set([...BUNDLE_IDS,STEAK_ID]);
     const others=all().filter(m=>qty[m.id]>0&&!bSet.has(m.id));
     let tot=bundles.length*SET_P+setO.length*SET_P;
-    if(steakLeft)tot+=STEAK_P*steakLeft;
+    if(steakLeft) tot+=STEAK_P*steakLeft;
     BUNDLE_IDS.forEach(id=>{if(qty[id]>0){const bd=bundles.filter(b=>b.id===id).length;const rem=qty[id]-bd;if(rem>0)tot+=fi(id).p*rem;}});
     tot+=others.reduce((s,m)=>s+m.p*qty[m.id],0);
     const se=document.getElementById('summ');
@@ -403,7 +409,7 @@ window._firebaseReady = async function() {
     let rows='';
     bundles.forEach(b=>rows+=`<div class="sr hi"><span>큐브세트 (${b.choice})</span><span>${SET_P.toLocaleString()}원</span></div>`);
     setO.forEach(s=>rows+=`<div class="sr"><span>큐브세트 (${s.n})</span><span>${SET_P.toLocaleString()}원</span></div>`);
-    if(steakLeft)rows+=`<div class="sr"><span>와규 큐브 스테이크 × ${steakLeft}</span><span>${(STEAK_P*steakLeft).toLocaleString()}원</span></div>`;
+    if(steakLeft) rows+=`<div class="sr"><span>와규 큐브 스테이크 × ${steakLeft}</span><span>${(STEAK_P*steakLeft).toLocaleString()}원</span></div>`;
     BUNDLE_IDS.forEach(id=>{if(qty[id]>0){const bd=bundles.filter(b=>b.id===id).length;const rem=qty[id]-bd;if(rem>0){const m=fi(id);rows+=`<div class="sr"><span>${m.n} × ${rem}</span><span>${(m.p*rem).toLocaleString()}원</span></div>`;}}});
     others.forEach(m=>{const c=m.p*qty[m.id];rows+=`<div class="sr"><span>${m.n} × ${qty[m.id]}</span><span>${m.t==='f'?'무료':c.toLocaleString()+'원'}</span></div>`;});
     document.getElementById('summ-rows').innerHTML=rows;
@@ -419,13 +425,13 @@ window._firebaseReady = async function() {
     const others=all().filter(m=>qty[m.id]>0&&!bSet.has(m.id));
     const memo=document.getElementById('memo').value;
     let tot=bundles.length*SET_P+setO.length*SET_P;
-    if(steakLeft)tot+=STEAK_P*steakLeft;
+    if(steakLeft) tot+=STEAK_P*steakLeft;
     BUNDLE_IDS.forEach(id=>{if(qty[id]>0){const bd=bundles.filter(b=>b.id===id).length;const rem=qty[id]-bd;if(rem>0)tot+=fi(id).p*rem;}});
     tot+=others.reduce((s,m)=>s+m.p*qty[m.id],0);
     const ia=[];
     bundles.forEach(b=>ia.push({n:'큐브세트 ('+b.choice+')',q:1,up:SET_P,fr:false}));
     setO.forEach(s=>ia.push({n:'큐브세트 ('+s.n+')',q:1,up:SET_P,fr:false}));
-    if(steakLeft)ia.push({n:'와규 큐브 스테이크',q:steakLeft,up:STEAK_P,fr:false});
+    if(steakLeft) ia.push({n:'와규 큐브 스테이크',q:steakLeft,up:STEAK_P,fr:false});
     BUNDLE_IDS.forEach(id=>{if(qty[id]>0){const bd=bundles.filter(b=>b.id===id).length;const rem=qty[id]-bd;if(rem>0){const m=fi(id);ia.push({n:m.n,q:rem,up:m.p,fr:false});}}});
     others.forEach(m=>ia.push({n:m.n,q:qty[m.id],up:m.p,fr:m.t==='f'}));
     const now=new Date();
@@ -485,11 +491,7 @@ window._firebaseReady = async function() {
   };
 
   buildCatGrid();
-};
-
-// initApp 호출 시 Firebase 모듈 실행
-window.initApp = function(){ window._firebaseReady(); };
-if(document.getElementById('main-app').style.display==='block'){ window._firebaseReady(); }
+}
 </script>
 </body>
 </html>
