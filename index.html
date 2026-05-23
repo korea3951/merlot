@@ -77,12 +77,15 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 .log-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
 .log-ttl{font-size:11px;color:var(--tx3);letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;}
 .log-clr{font-size:11px;color:var(--tx3);padding:4px 10px;border:.5px solid var(--bd);border-radius:10px;background:transparent;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
-.oc{padding:14px 16px;border:.5px solid var(--bd);background:var(--bg2);border-radius:14px;margin-bottom:8px;cursor:pointer;}
-.oh{display:flex;justify-content:space-between;margin-bottom:6px;}
+.oc{padding:14px 16px;border:.5px solid var(--bd);background:var(--bg2);border-radius:14px;margin-bottom:8px;cursor:pointer;position:relative;}
+.oc:active{border-color:var(--bd3);}
+.oh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
 .ot{font-size:15px;font-weight:500;color:var(--tx);}
 .oti{font-size:12px;color:var(--tx3);}
 .oi{font-size:13px;color:var(--tx2);line-height:1.7;}
 .op{font-size:15px;color:var(--ac);text-align:right;margin-top:6px;font-weight:500;}
+.del-btn{background:transparent;border:.5px solid var(--bd2);border-radius:8px;color:var(--tx3);font-size:11px;padding:4px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-left:8px;flex-shrink:0;}
+.del-btn:active{background:rgba(210,80,80,.2);border-color:rgba(210,80,80,.4);color:var(--red);}
 .emp{font-size:13px;color:var(--tx3);text-align:center;padding:28px 0;}
 .mover{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:flex-start;justify-content:center;padding:20px 16px;z-index:200;overflow-y:auto;}
 .mbox{background:var(--bg2);border:.5px solid var(--bd2);border-radius:16px;padding:20px;width:100%;max-width:480px;}
@@ -108,7 +111,9 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 .dtrow{display:flex;justify-content:space-between;align-items:baseline;margin-top:20px;}
 .dtlbl{font-size:12px;color:var(--tx3);letter-spacing:.12em;text-transform:uppercase;}
 .dtval{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--ac);}
-.dcls{margin-top:20px;width:100%;padding:16px;border:none;border-radius:12px;background:var(--ac);color:#0a0a0a;font-size:15px;font-weight:500;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+.d-act{display:flex;gap:8px;margin-top:20px;}
+.dcls{flex:2;padding:16px;border:none;border-radius:12px;background:var(--ac);color:#0a0a0a;font-size:15px;font-weight:500;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+.ddel{flex:1;padding:16px;border:.5px solid rgba(210,80,80,.4);border-radius:12px;background:transparent;color:var(--red);font-size:15px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
 </style>
 </head>
 <body>
@@ -135,7 +140,7 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
   </div>
   <div class="log">
     <div class="log-hdr">
-      <div class="log-ttl"><span class="sync-dot"></span>전체 주문 내역 (실시간 공유)</div>
+      <div class="log-ttl"><span class="sync-dot"></span>전체 주문 내역</div>
       <button class="log-clr" onclick="clearOrders()">전체 삭제</button>
     </div>
     <div id="log-list"><div class="emp">주문이 없습니다</div></div>
@@ -145,9 +150,8 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getDatabase, ref, push, onValue, remove, get } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+import { getDatabase, ref, push, onValue, remove } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-// Firebase 설정
 const app = initializeApp({
   apiKey: "AIzaSyDummy-not-needed-for-rtdb",
   databaseURL: "https://merlot-9cb09-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -227,13 +231,11 @@ MENUS.forEach(c=>c.items.forEach(m=>qty[m.id]=0));
 const all=()=>MENUS.flatMap(c=>c.items);
 const fi=id=>all().find(m=>m.id===id);
 
-// Firebase 실시간 동기화
-onValue(ordersRef, (snapshot)=>{
+// 실시간 동기화
+onValue(ordersRef,(snapshot)=>{
   orders=[];
   if(snapshot.exists()){
-    const data=snapshot.val();
-    // 최신순 정렬
-    orders=Object.entries(data)
+    orders=Object.entries(snapshot.val())
       .map(([key,val])=>({...val,_key:key}))
       .sort((a,b)=>b.id-a.id);
   }
@@ -241,16 +243,13 @@ onValue(ordersRef, (snapshot)=>{
   renderLog();
 });
 
-async function saveOrder(order){
-  await push(ordersRef, order);
-}
-async function deleteAllOrders(){
-  await remove(ordersRef);
-}
+async function saveOrder(o){ await push(ordersRef,o); }
+async function deleteOrder(key){ await remove(ref(db,'orders/'+key)); }
+async function deleteAllOrders(){ await remove(ordersRef); }
 
 function calcB(){
   let sl=qty[STEAK_ID]||0;
-  if(!sl)return{bundles:[],steakLeft:0,prLeft:{}};
+  if(!sl)return{bundles:[],steakLeft:0};
   const prl={};BUNDLE_IDS.forEach(id=>{if(qty[id]>0)prl[id]=qty[id];});
   const bundles=[];
   for(const id of BUNDLE_IDS){
@@ -258,13 +257,11 @@ function calcB(){
     while(sl>0&&prl[id]>0){bundles.push({choice:fi(id).n,id});sl--;prl[id]--;}
     if(!sl)break;
   }
-  Object.keys(prl).forEach(k=>{if(!prl[k])delete prl[k];});
-  return{bundles,steakLeft:sl,prLeft:prl};
+  return{bundles,steakLeft:sl};
 }
 
 function buildCatGrid(){
-  const grid=document.getElementById('cat-grid');
-  grid.innerHTML=MENUS.map((c,i)=>`<button class="cat-btn${i===curCat?' on':''}" onclick="selectCat(${i})">${c.cat}</button>`).join('');
+  document.getElementById('cat-grid').innerHTML=MENUS.map((c,i)=>`<button class="cat-btn${i===curCat?' on':''}" onclick="selectCat(${i})">${c.cat}</button>`).join('');
   renderMenuArea();
 }
 window.selectCat=function(i){
@@ -298,7 +295,6 @@ window.openTbl=function(){
   document.getElementById('mroot').innerHTML=h;
 };
 window.pickT=function(n){sel=n;document.getElementById('tbl-cur').textContent=n+'번 테이블';document.getElementById('tbl-btn').className='tbl-btn on';closeM();};
-
 window.openSet=function(){
   const ro=o=>`<button class="mopt" onclick="addSet('${o.n}')"><span>${o.n}</span><span class="mopt-p">${o.p.toLocaleString()}원</span></button>`;
   document.getElementById('mroot').innerHTML=`<div class="mover" onclick="closeM(event)"><div class="mbox" onclick="event.stopPropagation()"><div class="mtit">큐브스테이크 세트</div><div class="mdesc">파스타 또는 리소토 선택 — 59,000원 고정</div><div class="msec">파스타</div>${PASTA_O.map(ro).join('')}<div class="msec">리소토</div>${RISO_O.map(ro).join('')}<button class="mcls" onclick="closeM()">취소</button></div></div>`;
@@ -368,11 +364,42 @@ window.confirmOrder=async function(){
 function renderLog(){
   const e=document.getElementById('log-list');
   if(!orders.length){e.innerHTML='<div class="emp">주문이 없습니다</div>';return;}
-  e.innerHTML=orders.map((o,i)=>`<div class="oc" onclick="openDet(${i})"><div class="oh"><span class="ot">${o.table}번 테이블</span><span class="oti">${o.time}</span></div><div class="oi">${o.items.map(x=>x.n+' × '+x.q).join('<br>')}</div><div class="op">${o.total.toLocaleString()}원</div></div>`).join('');
+  e.innerHTML=orders.map((o,i)=>`
+    <div class="oc" onclick="openDet(${i})">
+      <div class="oh">
+        <span class="ot">${o.table}번 테이블</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="oti">${o.time}</span>
+          <button class="del-btn" onclick="event.stopPropagation();delOne('${o._key}')">삭제</button>
+        </div>
+      </div>
+      <div class="oi">${o.items.map(x=>x.n+' × '+x.q).join('<br>')}</div>
+      <div class="op">${o.total.toLocaleString()}원</div>
+    </div>`).join('');
 }
+
+window.delOne=async function(key){
+  if(confirm('이 주문을 삭제할까요?')){await deleteOrder(key);}
+};
+
 window.openDet=function(i){
   const o=orders[i];
-  document.getElementById('mroot').innerHTML=`<div class="mover" onclick="closeM(event)"><div class="dbox" onclick="event.stopPropagation()"><div class="dt">${o.table}번 테이블</div><div class="dti">${o.time}</div><div class="ditems">${o.items.map(x=>`<div class="dirow"><span class="diname">${x.n} × ${x.q}</span><span class="diprice">${x.fr?'무료':(x.up*x.q).toLocaleString()+'원'}</span></div>`).join('')}</div>${o.memo?`<div class="dmemo">📝 ${o.memo}</div>`:''}<div class="dtrow"><span class="dtlbl">TOTAL</span><span class="dtval">${o.total.toLocaleString()}원</span></div><button class="dcls" onclick="closeM()">닫기</button></div></div>`;
+  document.getElementById('mroot').innerHTML=`
+    <div class="mover" onclick="closeM(event)">
+      <div class="dbox" onclick="event.stopPropagation()">
+        <div class="dt">${o.table}번 테이블</div>
+        <div class="dti">${o.time}</div>
+        <div class="ditems">
+          ${o.items.map(x=>`<div class="dirow"><span class="diname">${x.n} × ${x.q}</span><span class="diprice">${x.fr?'무료':(x.up*x.q).toLocaleString()+'원'}</span></div>`).join('')}
+        </div>
+        ${o.memo?`<div class="dmemo">📝 ${o.memo}</div>`:''}
+        <div class="dtrow"><span class="dtlbl">TOTAL</span><span class="dtval">${o.total.toLocaleString()}원</span></div>
+        <div class="d-act">
+          <button class="ddel" onclick="delOne('${o._key}');closeM()">삭제</button>
+          <button class="dcls" onclick="closeM()">닫기</button>
+        </div>
+      </div>
+    </div>`;
 };
 
 window.clearOrders=async function(){
