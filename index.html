@@ -22,6 +22,23 @@
 html,body{background:var(--bg);color:var(--tx);font-family:'Noto Sans KR',sans-serif;}
 body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 .app{max-width:520px;margin:0 auto;padding:0 16px 100px;}
+
+/* 잠금 화면 */
+.lock-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;padding:40px 30px;}
+.lock-title{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--ac);letter-spacing:.2em;margin-bottom:6px;}
+.lock-sub{font-size:11px;color:var(--tx3);letter-spacing:.15em;margin-bottom:50px;}
+.lock-dots{display:flex;gap:16px;margin-bottom:40px;}
+.lock-dot{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--bd3);background:transparent;transition:all .15s;}
+.lock-dot.filled{background:var(--ac);border-color:var(--ac);}
+.lock-dot.error{background:rgba(210,80,80,.6);border-color:rgba(210,80,80,.6);}
+.lock-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;max-width:280px;}
+.kbtn{padding:20px 0;background:var(--bg2);border:.5px solid var(--bd2);border-radius:14px;color:var(--tx);font-size:22px;font-weight:400;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .1s;}
+.kbtn:active{background:var(--bg3);transform:scale(0.95);}
+.kbtn.del{font-size:18px;color:var(--tx3);}
+.kbtn.empty{background:transparent;border-color:transparent;pointer-events:none;}
+.lock-error{font-size:12px;color:rgba(210,80,80,.8);margin-top:16px;min-height:18px;}
+
+/* 메인 */
 .hdr{display:flex;align-items:flex-end;justify-content:space-between;padding:24px 0 16px;border-bottom:.5px solid var(--bd2);}
 .hdr h1{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--ac);letter-spacing:.2em;}
 .hdr p{font-size:10px;color:var(--tx3);letter-spacing:.15em;margin-top:3px;}
@@ -77,15 +94,14 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 .log-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
 .log-ttl{font-size:11px;color:var(--tx3);letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;}
 .log-clr{font-size:11px;color:var(--tx3);padding:4px 10px;border:.5px solid var(--bd);border-radius:10px;background:transparent;cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
-.oc{padding:14px 16px;border:.5px solid var(--bd);background:var(--bg2);border-radius:14px;margin-bottom:8px;cursor:pointer;position:relative;}
-.oc:active{border-color:var(--bd3);}
+.oc{padding:14px 16px;border:.5px solid var(--bd);background:var(--bg2);border-radius:14px;margin-bottom:8px;cursor:pointer;}
 .oh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
 .ot{font-size:15px;font-weight:500;color:var(--tx);}
 .oti{font-size:12px;color:var(--tx3);}
 .oi{font-size:13px;color:var(--tx2);line-height:1.7;}
 .op{font-size:15px;color:var(--ac);text-align:right;margin-top:6px;font-weight:500;}
 .del-btn{background:transparent;border:.5px solid var(--bd2);border-radius:8px;color:var(--tx3);font-size:11px;padding:4px 10px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-left:8px;flex-shrink:0;}
-.del-btn:active{background:rgba(210,80,80,.2);border-color:rgba(210,80,80,.4);color:var(--red);}
+.del-btn:active{background:rgba(210,80,80,.15);border-color:rgba(210,80,80,.4);color:var(--red);}
 .emp{font-size:13px;color:var(--tx3);text-align:center;padding:28px 0;}
 .mover{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:flex-start;justify-content:center;padding:20px 16px;z-index:200;overflow-y:auto;}
 .mbox{background:var(--bg2);border:.5px solid var(--bd2);border-radius:16px;padding:20px;width:100%;max-width:480px;}
@@ -117,7 +133,36 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 </style>
 </head>
 <body>
-<div class="app">
+
+<!-- 잠금 화면 -->
+<div class="lock-screen" id="lock-screen">
+  <div class="lock-title">MERLOT</div>
+  <div class="lock-sub">ITALIAN RESTAURANT</div>
+  <div class="lock-dots" id="lock-dots">
+    <div class="lock-dot" id="d0"></div>
+    <div class="lock-dot" id="d1"></div>
+    <div class="lock-dot" id="d2"></div>
+    <div class="lock-dot" id="d3"></div>
+  </div>
+  <div class="lock-keypad">
+    <button class="kbtn" onclick="kInput('1')">1</button>
+    <button class="kbtn" onclick="kInput('2')">2</button>
+    <button class="kbtn" onclick="kInput('3')">3</button>
+    <button class="kbtn" onclick="kInput('4')">4</button>
+    <button class="kbtn" onclick="kInput('5')">5</button>
+    <button class="kbtn" onclick="kInput('6')">6</button>
+    <button class="kbtn" onclick="kInput('7')">7</button>
+    <button class="kbtn" onclick="kInput('8')">8</button>
+    <button class="kbtn" onclick="kInput('9')">9</button>
+    <button class="kbtn empty"></button>
+    <button class="kbtn" onclick="kInput('0')">0</button>
+    <button class="kbtn del" onclick="kDel()">⌫</button>
+  </div>
+  <div class="lock-error" id="lock-error"></div>
+</div>
+
+<!-- 메인 앱 -->
+<div class="app" id="main-app" style="display:none;">
   <div class="hdr">
     <div><h1>MERLOT</h1><p>ITALIAN RESTAURANT</p></div>
     <div class="badge" id="badge"><span class="sync-dot"></span>0건</div>
@@ -148,275 +193,303 @@ body{padding-bottom:calc(env(safe-area-inset-bottom)+40px);}
 </div>
 <div id="mroot"></div>
 
+<script>
+// 잠금 로직
+const PW = '1106';
+let kVal = '';
+
+function kInput(n) {
+  if(kVal.length >= 4) return;
+  kVal += n;
+  updateDots();
+  if(kVal.length === 4) {
+    setTimeout(()=>{
+      if(kVal === PW) {
+        document.getElementById('lock-screen').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        sessionStorage.setItem('merlot_auth','1');
+        initApp();
+      } else {
+        document.querySelectorAll('.lock-dot').forEach(d=>d.className='lock-dot error');
+        document.getElementById('lock-error').textContent = '비밀번호가 틀렸습니다';
+        setTimeout(()=>{
+          kVal='';
+          updateDots();
+          document.getElementById('lock-error').textContent='';
+        }, 800);
+      }
+    }, 150);
+  }
+}
+function kDel() {
+  kVal = kVal.slice(0,-1);
+  updateDots();
+}
+function updateDots() {
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('d'+i);
+    d.className='lock-dot'+(i<kVal.length?' filled':'');
+  }
+}
+
+// 세션 유지 (한 번 로그인하면 탭 닫기 전까지 유지)
+if(sessionStorage.getItem('merlot_auth')==='1'){
+  document.getElementById('lock-screen').style.display='none';
+  document.getElementById('main-app').style.display='block';
+  initApp();
+}
+
+function initApp() {
+</script>
+
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getDatabase, ref, push, onValue, remove } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-const app = initializeApp({
-  apiKey: "AIzaSyDummy-not-needed-for-rtdb",
-  databaseURL: "https://merlot-9cb09-default-rtdb.asia-southeast1.firebasedatabase.app"
-});
-const db = getDatabase(app);
-const ordersRef = ref(db, 'orders');
-
-const SET_P=59000,STEAK_ID='s1',STEAK_P=41000;
-const BUNDLE_IDS=['p0','p1','p3','p4','p5','r1','r2','r3','r4','r5'];
-const PASTA_O=[
-  {n:'봉골레',p:20000},{n:'멜롯 크림 파스타',p:19000},{n:'멜롯 토마토 파스타',p:20000},
-  {n:'새우 크림 파스타',p:19000},{n:'새우 크림 들깨 파스타',p:19000},{n:'오징어 먹물 파스타',p:19000},
-  {n:'우삼겹 바질 파스타',p:20000},{n:'멜롯 오일 파스타',p:19000},{n:'알리오 올리오',p:19000},
-];
-const RISO_O=[
-  {n:'멜롯 크림 리소토',p:19000},{n:'새우 크림 리소토',p:19000},
-  {n:'새우 크림 들깨 리소토',p:19000},{n:'오징어 먹물 리소토',p:19000},
-  {n:'멜롯 토마토 로제 리소토',p:20000},
-];
-const MENUS=[
-  {cat:'시그니처',sub:'',items:[
-    {id:'s1',n:'와규 큐브 스테이크',p:41000,t:'b',nt:'230g'},
-    {id:'s2',n:'큐브스테이크 세트',p:59000,t:'set',nt:'스테이크 + 파스타 or 리소토 1개'},
-  ]},
-  {cat:'기본음료',sub:'샐러드 제외 · 에이드 +3,500원',items:[
-    {id:'fd1',n:'콜라',p:0,t:'f'},{id:'fd2',n:'사이다',p:0,t:'f'},{id:'fd3',n:'제로콜라',p:0,t:'f'},
-    {id:'fd4',n:'뜨거운 아메리카노',p:0,t:'f'},{id:'fd5',n:'아이스 아메리카노',p:0,t:'f'},
-    {id:'fd6',n:'레몬 에이드',p:3500,t:'a'},{id:'fd7',n:'자몽 에이드',p:3500,t:'a'},
-    {id:'fd8',n:'한라봉 에이드',p:3500,t:'a'},{id:'fd9',n:'블루베리 에이드',p:3500,t:'a'},
-  ]},
-  {cat:'파스타',sub:'',items:[
-    {id:'p0',n:'봉골레',p:20000,t:'l',nt:'리소토 변경 가능 · 한정'},
-    {id:'p1',n:'멜롯 크림 파스타',p:19000,t:'b',nt:'리소토 변경 가능'},
-    {id:'p2',n:'멜롯 토마토 파스타',p:20000,t:'b',nt:'리소토 변경 불가'},
-    {id:'p3',n:'새우 크림 파스타',p:19000,t:'',nt:'리소토 변경 가능'},
-    {id:'p4',n:'새우 크림 들깨 파스타',p:19000,t:'',nt:'리소토 변경 가능'},
-    {id:'p5',n:'오징어 먹물 파스타',p:19000,t:'',nt:'리소토 변경 가능'},
-    {id:'p6',n:'우삼겹 바질 파스타',p:20000,t:'b',nt:'리소토 변경 불가 (오일류)'},
-    {id:'p7',n:'멜롯 오일 파스타',p:19000,t:'',nt:'리소토 변경 불가 (오일류)'},
-    {id:'p8',n:'알리오 올리오',p:19000,t:'b',nt:'리소토 변경 불가 (오일류)'},
-  ]},
-  {cat:'리소토',sub:'리소토 변경 가능한 메뉴',items:[
-    {id:'r1',n:'멜롯 크림 리소토',p:19000,t:'b'},
-    {id:'r2',n:'새우 크림 리소토',p:19000,t:''},
-    {id:'r3',n:'새우 크림 들깨 리소토',p:19000,t:''},
-    {id:'r4',n:'오징어 먹물 리소토',p:19000,t:''},
-    {id:'r5',n:'멜롯 토마토 로제 리소토',p:20000,t:''},
-  ]},
-  {cat:'피자',sub:'',items:[
-    {id:'pz1',n:'고르곤졸라 피자',p:18000,t:''},{id:'pz2',n:'루꼴라 피자',p:19000,t:''},{id:'pz3',n:'머쉬룸 차돌 피자',p:19000,t:''},
-  ]},
-  {cat:'샐러드·사이드',sub:'',items:[
-    {id:'sa1',n:'상큼 하우스 샐러드',p:16000,t:''},{id:'sa2',n:'상큼 미니 샐러드',p:8000,t:''},{id:'sd1',n:'바게트 추가',p:3000,t:'s'},
-  ]},
-  {cat:'감바스',sub:'',items:[
-    {id:'g1',n:'멜롯 토마토 감바스',p:28000,t:'b'},{id:'g2',n:'멜롯 오일 감바스',p:28000,t:'b'},
-  ]},
-  {cat:'커피·음료',sub:'',items:[
-    {id:'d1',n:'아메리카노',p:4000,t:''},{id:'d2',n:'카페라떼',p:5000,t:''},{id:'d3',n:'바닐라라떼',p:5500,t:''},
-    {id:'d4',n:'레몬 에이드',p:5000,t:''},{id:'d5',n:'자몽 에이드',p:5000,t:''},{id:'d6',n:'한라봉 에이드',p:5000,t:''},{id:'d7',n:'블루베리 에이드',p:5000,t:''},
-  ]},
-  {cat:'맥주·하이볼',sub:'',items:[
-    {id:'b1',n:'스텔라 생맥주',p:8000,t:''},{id:'b2',n:'산미구엘',p:7000,t:''},{id:'b3',n:'호가든',p:6000,t:''},{id:'b4',n:'호가든 로제',p:6000,t:''},
-    {id:'hb1',n:'산토리 하이볼',p:8000,t:''},{id:'hb2',n:'짐빔 하이볼',p:8000,t:''},{id:'hb3',n:'얼그레이 하이볼',p:8000,t:''},
-  ]},
-  {cat:'와인',sub:'콜키지 10,000원 / Bottle',items:[
-    {id:'hw1',n:'하우스 레드 와인',p:8000,t:''},{id:'hw2',n:'하우스 화이트 와인',p:8000,t:''},
-    {id:'w1',n:'루이스 펠리페 에드워즈',p:26000,t:'',nt:'레드·칠레'},{id:'w2',n:'테루아 앤 비뇨블 레드',p:29000,t:'',nt:'프랑스'},
-    {id:'w3',n:'무초 마스 레드',p:36000,t:'',nt:'스페인'},{id:'w4',n:'테라자스 리제르바',p:43000,t:'',nt:'말벡·아르헨티나'},
-    {id:'w5',n:'19크라임스 업라이징',p:47000,t:'',nt:'호주'},{id:'w6',n:'테루아 앤 비뇨블 화이트',p:29000,t:'',nt:'프랑스'},
-    {id:'w7',n:'무초마스 화이트',p:36000,t:'',nt:'스페인'},{id:'w8',n:'또스띠 핑크 모스까또',p:45000,t:'',nt:'스파클링·이탈리아'},
-  ]},
-];
-
-let sel=null,qty={},setO=[],orders=[],curCat=0;
-MENUS.forEach(c=>c.items.forEach(m=>qty[m.id]=0));
-const all=()=>MENUS.flatMap(c=>c.items);
-const fi=id=>all().find(m=>m.id===id);
-
-// 실시간 동기화
-onValue(ordersRef,(snapshot)=>{
-  orders=[];
-  if(snapshot.exists()){
-    orders=Object.entries(snapshot.val())
-      .map(([key,val])=>({...val,_key:key}))
-      .sort((a,b)=>b.id-a.id);
-  }
-  document.getElementById('badge').innerHTML=`<span class="sync-dot"></span>${orders.length}건`;
-  renderLog();
-});
-
-async function saveOrder(o){ await push(ordersRef,o); }
-async function deleteOrder(key){ await remove(ref(db,'orders/'+key)); }
-async function deleteAllOrders(){ await remove(ordersRef); }
-
-function calcB(){
-  let sl=qty[STEAK_ID]||0;
-  if(!sl)return{bundles:[],steakLeft:0};
-  const prl={};BUNDLE_IDS.forEach(id=>{if(qty[id]>0)prl[id]=qty[id];});
-  const bundles=[];
-  for(const id of BUNDLE_IDS){
-    if(!prl[id])continue;
-    while(sl>0&&prl[id]>0){bundles.push({choice:fi(id).n,id});sl--;prl[id]--;}
-    if(!sl)break;
-  }
-  return{bundles,steakLeft:sl};
-}
-
-function buildCatGrid(){
-  document.getElementById('cat-grid').innerHTML=MENUS.map((c,i)=>`<button class="cat-btn${i===curCat?' on':''}" onclick="selectCat(${i})">${c.cat}</button>`).join('');
-  renderMenuArea();
-}
-window.selectCat=function(i){
-  curCat=i;
-  document.querySelectorAll('.cat-btn').forEach((b,j)=>b.className='cat-btn'+(j===i?' on':''));
-  renderMenuArea();
-};
-function renderMenuArea(){
-  const tL={b:'BEST',l:'한정',f:'무료',a:'에이드',s:'사이드',set:'세트'};
-  const tC={b:'tb',l:'tl',f:'tf',a:'ta',s:'ts',set:'tset'};
-  const c=MENUS[curCat];
-  let html='';
-  if(c.sub)html+=`<div class="cat-sub">${c.sub}</div>`;
-  c.items.forEach(m=>{
-    const pd=m.t==='f'?'<span class="tag tf">무료</span>':m.t==='a'?`<span style="color:var(--pk);font-size:13px;">+3,500원</span>`:m.p.toLocaleString()+'원';
-    const th=m.t&&tC[m.t]?`<span class="tag ${tC[m.t]}">${tL[m.t]}</span>`:'';
-    if(m.id==='s2'){
-      html+=`<div class="mi" id="mi-s2"><div class="mi-info"><div class="mi-name">${m.n}<span class="tag tset">세트</span></div><div class="mi-note">${m.nt||''}</div><div class="mi-price">${pd} 고정</div></div><button class="set-btn" onclick="openSet()">+ 추가</button></div><div id="slc"></div>`;
-    } else {
-      html+=`<div class="mi${qty[m.id]>0?' on':''}" id="mi-${m.id}"><div class="mi-info"><div class="mi-name">${m.n}${th}</div>${m.nt?`<div class="mi-note">${m.nt}</div>`:''}<div class="mi-price">${pd}</div></div><div class="qc"><button class="qb" onclick="cq('${m.id}',-1)">−</button><span class="qn" id="q-${m.id}">${qty[m.id]}</span><button class="qb" onclick="cq('${m.id}',1)">+</button></div></div>`;
-    }
+window._firebaseReady = async function() {
+  const app = initializeApp({
+    apiKey: "AIzaSyDummy-not-needed-for-rtdb",
+    databaseURL: "https://merlot-9cb09-default-rtdb.asia-southeast1.firebasedatabase.app"
   });
-  document.getElementById('menu-area').innerHTML=html;
-  renderSetList();
-}
+  const db = getDatabase(app);
+  const ordersRef = ref(db, 'orders');
 
-window.openTbl=function(){
-  let h=`<div class="mover" onclick="closeM(event)"><div class="mbox" onclick="event.stopPropagation()"><div class="mtit">테이블 선택</div><div class="mdesc">번호를 선택하세요</div><div class="tgrid">`;
-  for(let i=1;i<=30;i++)h+=`<button class="tgb${sel===i?' on':''}" onclick="pickT(${i})">${i}</button>`;
-  h+=`</div><button class="mcls" onclick="closeM()">취소</button></div></div>`;
-  document.getElementById('mroot').innerHTML=h;
-};
-window.pickT=function(n){sel=n;document.getElementById('tbl-cur').textContent=n+'번 테이블';document.getElementById('tbl-btn').className='tbl-btn on';closeM();};
-window.openSet=function(){
-  const ro=o=>`<button class="mopt" onclick="addSet('${o.n}')"><span>${o.n}</span><span class="mopt-p">${o.p.toLocaleString()}원</span></button>`;
-  document.getElementById('mroot').innerHTML=`<div class="mover" onclick="closeM(event)"><div class="mbox" onclick="event.stopPropagation()"><div class="mtit">큐브스테이크 세트</div><div class="mdesc">파스타 또는 리소토 선택 — 59,000원 고정</div><div class="msec">파스타</div>${PASTA_O.map(ro).join('')}<div class="msec">리소토</div>${RISO_O.map(ro).join('')}<button class="mcls" onclick="closeM()">취소</button></div></div>`;
-};
-window.addSet=function(n){setO.push({n});closeM();renderSetList();updSumm();};
-window.removeSet=function(i){setO.splice(i,1);renderSetList();updSumm();};
-function renderSetList(){
-  const e=document.getElementById('slc');if(!e)return;
-  e.innerHTML=setO.length?`<div class="slc-wrap">${setO.map((s,i)=>`<div class="sl-row"><span>· ${s.n}</span><button class="sl-rm" onclick="removeSet(${i})">×</button></div>`).join('')}</div>`:'';
-}
-function closeM(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('mroot').innerHTML='';}
-window.closeM=closeM;
+  const SET_P=59000,STEAK_ID='s1',STEAK_P=41000;
+  const BUNDLE_IDS=['p0','p1','p3','p4','p5','r1','r2','r3','r4','r5'];
+  const PASTA_O=[
+    {n:'봉골레',p:20000},{n:'멜롯 크림 파스타',p:19000},{n:'멜롯 토마토 파스타',p:20000},
+    {n:'새우 크림 파스타',p:19000},{n:'새우 크림 들깨 파스타',p:19000},{n:'오징어 먹물 파스타',p:19000},
+    {n:'우삼겹 바질 파스타',p:20000},{n:'멜롯 오일 파스타',p:19000},{n:'알리오 올리오',p:19000},
+  ];
+  const RISO_O=[
+    {n:'멜롯 크림 리소토',p:19000},{n:'새우 크림 리소토',p:19000},
+    {n:'새우 크림 들깨 리소토',p:19000},{n:'오징어 먹물 리소토',p:19000},
+    {n:'멜롯 토마토 로제 리소토',p:20000},
+  ];
+  const MENUS=[
+    {cat:'시그니처',sub:'',items:[
+      {id:'s1',n:'와규 큐브 스테이크',p:41000,t:'b',nt:'230g'},
+      {id:'s2',n:'큐브스테이크 세트',p:59000,t:'set',nt:'스테이크 + 파스타 or 리소토 1개'},
+    ]},
+    {cat:'기본음료',sub:'샐러드 제외 · 에이드 +3,500원',items:[
+      {id:'fd1',n:'콜라',p:0,t:'f'},{id:'fd2',n:'사이다',p:0,t:'f'},{id:'fd3',n:'제로콜라',p:0,t:'f'},
+      {id:'fd4',n:'뜨거운 아메리카노',p:0,t:'f'},{id:'fd5',n:'아이스 아메리카노',p:0,t:'f'},
+      {id:'fd6',n:'레몬 에이드',p:3500,t:'a'},{id:'fd7',n:'자몽 에이드',p:3500,t:'a'},
+      {id:'fd8',n:'한라봉 에이드',p:3500,t:'a'},{id:'fd9',n:'블루베리 에이드',p:3500,t:'a'},
+    ]},
+    {cat:'파스타',sub:'',items:[
+      {id:'p0',n:'봉골레',p:20000,t:'l',nt:'리소토 변경 가능 · 한정'},
+      {id:'p1',n:'멜롯 크림 파스타',p:19000,t:'b',nt:'리소토 변경 가능'},
+      {id:'p2',n:'멜롯 토마토 파스타',p:20000,t:'b',nt:'리소토 변경 불가'},
+      {id:'p3',n:'새우 크림 파스타',p:19000,t:'',nt:'리소토 변경 가능'},
+      {id:'p4',n:'새우 크림 들깨 파스타',p:19000,t:'',nt:'리소토 변경 가능'},
+      {id:'p5',n:'오징어 먹물 파스타',p:19000,t:'',nt:'리소토 변경 가능'},
+      {id:'p6',n:'우삼겹 바질 파스타',p:20000,t:'b',nt:'리소토 변경 불가 (오일류)'},
+      {id:'p7',n:'멜롯 오일 파스타',p:19000,t:'',nt:'리소토 변경 불가 (오일류)'},
+      {id:'p8',n:'알리오 올리오',p:19000,t:'b',nt:'리소토 변경 불가 (오일류)'},
+    ]},
+    {cat:'리소토',sub:'리소토 변경 가능한 메뉴',items:[
+      {id:'r1',n:'멜롯 크림 리소토',p:19000,t:'b'},
+      {id:'r2',n:'새우 크림 리소토',p:19000,t:''},
+      {id:'r3',n:'새우 크림 들깨 리소토',p:19000,t:''},
+      {id:'r4',n:'오징어 먹물 리소토',p:19000,t:''},
+      {id:'r5',n:'멜롯 토마토 로제 리소토',p:20000,t:''},
+    ]},
+    {cat:'피자',sub:'',items:[
+      {id:'pz1',n:'고르곤졸라 피자',p:18000,t:''},{id:'pz2',n:'루꼴라 피자',p:19000,t:''},{id:'pz3',n:'머쉬룸 차돌 피자',p:19000,t:''},
+    ]},
+    {cat:'샐러드·사이드',sub:'',items:[
+      {id:'sa1',n:'상큼 하우스 샐러드',p:16000,t:''},{id:'sa2',n:'상큼 미니 샐러드',p:8000,t:''},{id:'sd1',n:'바게트 추가',p:3000,t:'s'},
+    ]},
+    {cat:'감바스',sub:'',items:[
+      {id:'g1',n:'멜롯 토마토 감바스',p:28000,t:'b'},{id:'g2',n:'멜롯 오일 감바스',p:28000,t:'b'},
+    ]},
+    {cat:'커피·음료',sub:'',items:[
+      {id:'d1',n:'아메리카노',p:4000,t:''},{id:'d2',n:'카페라떼',p:5000,t:''},{id:'d3',n:'바닐라라떼',p:5500,t:''},
+      {id:'d4',n:'레몬 에이드',p:5000,t:''},{id:'d5',n:'자몽 에이드',p:5000,t:''},{id:'d6',n:'한라봉 에이드',p:5000,t:''},{id:'d7',n:'블루베리 에이드',p:5000,t:''},
+    ]},
+    {cat:'맥주·하이볼',sub:'',items:[
+      {id:'b1',n:'스텔라 생맥주',p:8000,t:''},{id:'b2',n:'산미구엘',p:7000,t:''},{id:'b3',n:'호가든',p:6000,t:''},{id:'b4',n:'호가든 로제',p:6000,t:''},
+      {id:'hb1',n:'산토리 하이볼',p:8000,t:''},{id:'hb2',n:'짐빔 하이볼',p:8000,t:''},{id:'hb3',n:'얼그레이 하이볼',p:8000,t:''},
+    ]},
+    {cat:'와인',sub:'콜키지 10,000원 / Bottle',items:[
+      {id:'hw1',n:'하우스 레드 와인',p:8000,t:''},{id:'hw2',n:'하우스 화이트 와인',p:8000,t:''},
+      {id:'w1',n:'루이스 펠리페 에드워즈',p:26000,t:'',nt:'레드·칠레'},{id:'w2',n:'테루아 앤 비뇨블 레드',p:29000,t:'',nt:'프랑스'},
+      {id:'w3',n:'무초 마스 레드',p:36000,t:'',nt:'스페인'},{id:'w4',n:'테라자스 리제르바',p:43000,t:'',nt:'말벡·아르헨티나'},
+      {id:'w5',n:'19크라임스 업라이징',p:47000,t:'',nt:'호주'},{id:'w6',n:'테루아 앤 비뇨블 화이트',p:29000,t:'',nt:'프랑스'},
+      {id:'w7',n:'무초마스 화이트',p:36000,t:'',nt:'스페인'},{id:'w8',n:'또스띠 핑크 모스까또',p:45000,t:'',nt:'스파클링·이탈리아'},
+    ]},
+  ];
 
-window.cq=function(id,d){
-  qty[id]=Math.max(0,qty[id]+d);
-  const n=document.getElementById('q-'+id);if(n)n.textContent=qty[id];
-  const e=document.getElementById('mi-'+id);if(e)e.className='mi'+(qty[id]>0?' on':'');
-  updSumm();
-};
+  let sel=null,qty={},setO=[],orders=[],curCat=0;
+  MENUS.forEach(c=>c.items.forEach(m=>qty[m.id]=0));
+  const all=()=>MENUS.flatMap(c=>c.items);
+  const fi=id=>all().find(m=>m.id===id);
 
-function updSumm(){
-  const{bundles,steakLeft}=calcB();
-  const bundleSet=new Set([...BUNDLE_IDS,STEAK_ID]);
-  const others=all().filter(m=>qty[m.id]>0&&!bundleSet.has(m.id));
-  let tot=bundles.length*SET_P+setO.length*SET_P;
-  if(steakLeft)tot+=STEAK_P*steakLeft;
-  BUNDLE_IDS.forEach(id=>{if(qty[id]>0){const bundled=bundles.filter(b=>b.id===id).length;const rem=qty[id]-bundled;if(rem>0)tot+=fi(id).p*rem;}});
-  tot+=others.reduce((s,m)=>s+m.p*qty[m.id],0);
-  const se=document.getElementById('summ');
-  const has=Object.values(qty).some(v=>v>0)||setO.length>0;
-  if(!has){se.style.display='none';return;}
-  se.style.display='block';
-  let rows='';
-  bundles.forEach(b=>rows+=`<div class="sr hi"><span>큐브세트 (${b.choice})</span><span>${SET_P.toLocaleString()}원</span></div>`);
-  setO.forEach(s=>rows+=`<div class="sr"><span>큐브세트 (${s.n})</span><span>${SET_P.toLocaleString()}원</span></div>`);
-  if(steakLeft)rows+=`<div class="sr"><span>와규 큐브 스테이크 × ${steakLeft}</span><span>${(STEAK_P*steakLeft).toLocaleString()}원</span></div>`;
-  BUNDLE_IDS.forEach(id=>{if(qty[id]>0){const bundled=bundles.filter(b=>b.id===id).length;const rem=qty[id]-bundled;if(rem>0){const m=fi(id);rows+=`<div class="sr"><span>${m.n} × ${rem}</span><span>${(m.p*rem).toLocaleString()}원</span></div>`;}}});
-  others.forEach(m=>{const c=m.p*qty[m.id];rows+=`<div class="sr"><span>${m.n} × ${qty[m.id]}</span><span>${m.t==='f'?'무료':c.toLocaleString()+'원'}</span></div>`;});
-  document.getElementById('summ-rows').innerHTML=rows;
-  document.getElementById('stot').textContent=tot.toLocaleString()+'원';
-}
+  onValue(ordersRef,(snapshot)=>{
+    orders=[];
+    if(snapshot.exists()){
+      orders=Object.entries(snapshot.val()).map(([k,v])=>({...v,_key:k})).sort((a,b)=>b.id-a.id);
+    }
+    document.getElementById('badge').innerHTML=`<span class="sync-dot"></span>${orders.length}건`;
+    renderLog();
+  });
 
-window.confirmOrder=async function(){
-  if(!sel){alert('테이블을 선택해 주세요.');return;}
-  const has=Object.values(qty).some(v=>v>0)||setO.length>0;
-  if(!has){alert('메뉴를 선택해 주세요.');return;}
-  const{bundles,steakLeft}=calcB();
-  const bundleSet=new Set([...BUNDLE_IDS,STEAK_ID]);
-  const others=all().filter(m=>qty[m.id]>0&&!bundleSet.has(m.id));
-  const memo=document.getElementById('memo').value;
-  let tot=bundles.length*SET_P+setO.length*SET_P;
-  if(steakLeft)tot+=STEAK_P*steakLeft;
-  BUNDLE_IDS.forEach(id=>{if(qty[id]>0){const bundled=bundles.filter(b=>b.id===id).length;const rem=qty[id]-bundled;if(rem>0)tot+=fi(id).p*rem;}});
-  tot+=others.reduce((s,m)=>s+m.p*qty[m.id],0);
-  const ia=[];
-  bundles.forEach(b=>ia.push({n:'큐브세트 ('+b.choice+')',q:1,up:SET_P,fr:false}));
-  setO.forEach(s=>ia.push({n:'큐브세트 ('+s.n+')',q:1,up:SET_P,fr:false}));
-  if(steakLeft)ia.push({n:'와규 큐브 스테이크',q:steakLeft,up:STEAK_P,fr:false});
-  BUNDLE_IDS.forEach(id=>{if(qty[id]>0){const bundled=bundles.filter(b=>b.id===id).length;const rem=qty[id]-bundled;if(rem>0){const m=fi(id);ia.push({n:m.n,q:rem,up:m.p,fr:false});}}});
-  others.forEach(m=>ia.push({n:m.n,q:qty[m.id],up:m.p,fr:m.t==='f'}));
-  const now=new Date();
-  const ti=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
-  await saveOrder({id:Date.now(),table:sel,items:ia,memo,total:tot,time:ti});
-  resetOrder();
-};
+  function calcB(){
+    let sl=qty[STEAK_ID]||0;
+    if(!sl)return{bundles:[],steakLeft:0};
+    const prl={};BUNDLE_IDS.forEach(id=>{if(qty[id]>0)prl[id]=qty[id];});
+    const bundles=[];
+    for(const id of BUNDLE_IDS){if(!prl[id])continue;while(sl>0&&prl[id]>0){bundles.push({choice:fi(id).n,id});sl--;prl[id]--;}if(!sl)break;}
+    return{bundles,steakLeft:sl};
+  }
 
-function renderLog(){
-  const e=document.getElementById('log-list');
-  if(!orders.length){e.innerHTML='<div class="emp">주문이 없습니다</div>';return;}
-  e.innerHTML=orders.map((o,i)=>`
-    <div class="oc" onclick="openDet(${i})">
-      <div class="oh">
-        <span class="ot">${o.table}번 테이블</span>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span class="oti">${o.time}</span>
-          <button class="del-btn" onclick="event.stopPropagation();delOne('${o._key}')">삭제</button>
+  function buildCatGrid(){
+    document.getElementById('cat-grid').innerHTML=MENUS.map((c,i)=>`<button class="cat-btn${i===curCat?' on':''}" onclick="selectCat(${i})">${c.cat}</button>`).join('');
+    renderMenuArea();
+  }
+  window.selectCat=function(i){curCat=i;document.querySelectorAll('.cat-btn').forEach((b,j)=>b.className='cat-btn'+(j===i?' on':''));renderMenuArea();};
+
+  function renderMenuArea(){
+    const tL={b:'BEST',l:'한정',f:'무료',a:'에이드',s:'사이드',set:'세트'};
+    const tC={b:'tb',l:'tl',f:'tf',a:'ta',s:'ts',set:'tset'};
+    const c=MENUS[curCat];let html='';
+    if(c.sub)html+=`<div class="cat-sub">${c.sub}</div>`;
+    c.items.forEach(m=>{
+      const pd=m.t==='f'?'<span class="tag tf">무료</span>':m.t==='a'?`<span style="color:var(--pk);font-size:13px;">+3,500원</span>`:m.p.toLocaleString()+'원';
+      const th=m.t&&tC[m.t]?`<span class="tag ${tC[m.t]}">${tL[m.t]}</span>`:'';
+      if(m.id==='s2'){html+=`<div class="mi" id="mi-s2"><div class="mi-info"><div class="mi-name">${m.n}<span class="tag tset">세트</span></div><div class="mi-note">${m.nt||''}</div><div class="mi-price">${pd} 고정</div></div><button class="set-btn" onclick="openSet()">+ 추가</button></div><div id="slc"></div>`;}
+      else{html+=`<div class="mi${qty[m.id]>0?' on':''}" id="mi-${m.id}"><div class="mi-info"><div class="mi-name">${m.n}${th}</div>${m.nt?`<div class="mi-note">${m.nt}</div>`:''}<div class="mi-price">${pd}</div></div><div class="qc"><button class="qb" onclick="cq('${m.id}',-1)">−</button><span class="qn" id="q-${m.id}">${qty[m.id]}</span><button class="qb" onclick="cq('${m.id}',1)">+</button></div></div>`;}
+    });
+    document.getElementById('menu-area').innerHTML=html;renderSetList();
+  }
+
+  window.openTbl=function(){
+    let h=`<div class="mover" onclick="closeM(event)"><div class="mbox" onclick="event.stopPropagation()"><div class="mtit">테이블 선택</div><div class="mdesc">번호를 선택하세요</div><div class="tgrid">`;
+    for(let i=1;i<=30;i++)h+=`<button class="tgb${sel===i?' on':''}" onclick="pickT(${i})">${i}</button>`;
+    h+=`</div><button class="mcls" onclick="closeM()">취소</button></div></div>`;
+    document.getElementById('mroot').innerHTML=h;
+  };
+  window.pickT=function(n){sel=n;document.getElementById('tbl-cur').textContent=n+'번 테이블';document.getElementById('tbl-btn').className='tbl-btn on';closeM();};
+  window.openSet=function(){
+    const ro=o=>`<button class="mopt" onclick="addSet('${o.n}')"><span>${o.n}</span><span class="mopt-p">${o.p.toLocaleString()}원</span></button>`;
+    document.getElementById('mroot').innerHTML=`<div class="mover" onclick="closeM(event)"><div class="mbox" onclick="event.stopPropagation()"><div class="mtit">큐브스테이크 세트</div><div class="mdesc">파스타 또는 리소토 선택 — 59,000원 고정</div><div class="msec">파스타</div>${PASTA_O.map(ro).join('')}<div class="msec">리소토</div>${RISO_O.map(ro).join('')}<button class="mcls" onclick="closeM()">취소</button></div></div>`;
+  };
+  window.addSet=function(n){setO.push({n});closeM();renderSetList();updSumm();};
+  window.removeSet=function(i){setO.splice(i,1);renderSetList();updSumm();};
+  function renderSetList(){const e=document.getElementById('slc');if(!e)return;e.innerHTML=setO.length?`<div class="slc-wrap">${setO.map((s,i)=>`<div class="sl-row"><span>· ${s.n}</span><button class="sl-rm" onclick="removeSet(${i})">×</button></div>`).join('')}</div>`:'';}
+  function closeM(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('mroot').innerHTML='';}
+  window.closeM=closeM;
+
+  window.cq=function(id,d){
+    qty[id]=Math.max(0,qty[id]+d);
+    const n=document.getElementById('q-'+id);if(n)n.textContent=qty[id];
+    const e=document.getElementById('mi-'+id);if(e)e.className='mi'+(qty[id]>0?' on':'');
+    updSumm();
+  };
+
+  function updSumm(){
+    const{bundles,steakLeft}=calcB();
+    const bSet=new Set([...BUNDLE_IDS,STEAK_ID]);
+    const others=all().filter(m=>qty[m.id]>0&&!bSet.has(m.id));
+    let tot=bundles.length*SET_P+setO.length*SET_P;
+    if(steakLeft)tot+=STEAK_P*steakLeft;
+    BUNDLE_IDS.forEach(id=>{if(qty[id]>0){const bd=bundles.filter(b=>b.id===id).length;const rem=qty[id]-bd;if(rem>0)tot+=fi(id).p*rem;}});
+    tot+=others.reduce((s,m)=>s+m.p*qty[m.id],0);
+    const se=document.getElementById('summ');
+    const has=Object.values(qty).some(v=>v>0)||setO.length>0;
+    if(!has){se.style.display='none';return;}
+    se.style.display='block';
+    let rows='';
+    bundles.forEach(b=>rows+=`<div class="sr hi"><span>큐브세트 (${b.choice})</span><span>${SET_P.toLocaleString()}원</span></div>`);
+    setO.forEach(s=>rows+=`<div class="sr"><span>큐브세트 (${s.n})</span><span>${SET_P.toLocaleString()}원</span></div>`);
+    if(steakLeft)rows+=`<div class="sr"><span>와규 큐브 스테이크 × ${steakLeft}</span><span>${(STEAK_P*steakLeft).toLocaleString()}원</span></div>`;
+    BUNDLE_IDS.forEach(id=>{if(qty[id]>0){const bd=bundles.filter(b=>b.id===id).length;const rem=qty[id]-bd;if(rem>0){const m=fi(id);rows+=`<div class="sr"><span>${m.n} × ${rem}</span><span>${(m.p*rem).toLocaleString()}원</span></div>`;}}});
+    others.forEach(m=>{const c=m.p*qty[m.id];rows+=`<div class="sr"><span>${m.n} × ${qty[m.id]}</span><span>${m.t==='f'?'무료':c.toLocaleString()+'원'}</span></div>`;});
+    document.getElementById('summ-rows').innerHTML=rows;
+    document.getElementById('stot').textContent=tot.toLocaleString()+'원';
+  }
+
+  window.confirmOrder=async function(){
+    if(!sel){alert('테이블을 선택해 주세요.');return;}
+    const has=Object.values(qty).some(v=>v>0)||setO.length>0;
+    if(!has){alert('메뉴를 선택해 주세요.');return;}
+    const{bundles,steakLeft}=calcB();
+    const bSet=new Set([...BUNDLE_IDS,STEAK_ID]);
+    const others=all().filter(m=>qty[m.id]>0&&!bSet.has(m.id));
+    const memo=document.getElementById('memo').value;
+    let tot=bundles.length*SET_P+setO.length*SET_P;
+    if(steakLeft)tot+=STEAK_P*steakLeft;
+    BUNDLE_IDS.forEach(id=>{if(qty[id]>0){const bd=bundles.filter(b=>b.id===id).length;const rem=qty[id]-bd;if(rem>0)tot+=fi(id).p*rem;}});
+    tot+=others.reduce((s,m)=>s+m.p*qty[m.id],0);
+    const ia=[];
+    bundles.forEach(b=>ia.push({n:'큐브세트 ('+b.choice+')',q:1,up:SET_P,fr:false}));
+    setO.forEach(s=>ia.push({n:'큐브세트 ('+s.n+')',q:1,up:SET_P,fr:false}));
+    if(steakLeft)ia.push({n:'와규 큐브 스테이크',q:steakLeft,up:STEAK_P,fr:false});
+    BUNDLE_IDS.forEach(id=>{if(qty[id]>0){const bd=bundles.filter(b=>b.id===id).length;const rem=qty[id]-bd;if(rem>0){const m=fi(id);ia.push({n:m.n,q:rem,up:m.p,fr:false});}}});
+    others.forEach(m=>ia.push({n:m.n,q:qty[m.id],up:m.p,fr:m.t==='f'}));
+    const now=new Date();
+    const ti=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+    await push(ordersRef,{id:Date.now(),table:sel,items:ia,memo,total:tot,time:ti});
+    resetOrder();
+  };
+
+  function renderLog(){
+    const e=document.getElementById('log-list');
+    if(!orders.length){e.innerHTML='<div class="emp">주문이 없습니다</div>';return;}
+    e.innerHTML=orders.map((o,i)=>`
+      <div class="oc" onclick="openDet(${i})">
+        <div class="oh">
+          <span class="ot">${o.table}번 테이블</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="oti">${o.time}</span>
+            <button class="del-btn" onclick="event.stopPropagation();delOne('${o._key}')">삭제</button>
+          </div>
         </div>
-      </div>
-      <div class="oi">${o.items.map(x=>x.n+' × '+x.q).join('<br>')}</div>
-      <div class="op">${o.total.toLocaleString()}원</div>
-    </div>`).join('');
-}
+        <div class="oi">${o.items.map(x=>x.n+' × '+x.q).join('<br>')}</div>
+        <div class="op">${o.total.toLocaleString()}원</div>
+      </div>`).join('');
+  }
 
-window.delOne=async function(key){
-  if(confirm('이 주문을 삭제할까요?')){await deleteOrder(key);}
-};
-
-window.openDet=function(i){
-  const o=orders[i];
-  document.getElementById('mroot').innerHTML=`
-    <div class="mover" onclick="closeM(event)">
-      <div class="dbox" onclick="event.stopPropagation()">
-        <div class="dt">${o.table}번 테이블</div>
-        <div class="dti">${o.time}</div>
-        <div class="ditems">
-          ${o.items.map(x=>`<div class="dirow"><span class="diname">${x.n} × ${x.q}</span><span class="diprice">${x.fr?'무료':(x.up*x.q).toLocaleString()+'원'}</span></div>`).join('')}
+  window.delOne=async function(key){
+    if(confirm('이 주문을 삭제할까요?')){await remove(ref(db,'orders/'+key));}
+  };
+  window.openDet=function(i){
+    const o=orders[i];
+    document.getElementById('mroot').innerHTML=`
+      <div class="mover" onclick="closeM(event)">
+        <div class="dbox" onclick="event.stopPropagation()">
+          <div class="dt">${o.table}번 테이블</div>
+          <div class="dti">${o.time}</div>
+          <div class="ditems">${o.items.map(x=>`<div class="dirow"><span class="diname">${x.n} × ${x.q}</span><span class="diprice">${x.fr?'무료':(x.up*x.q).toLocaleString()+'원'}</span></div>`).join('')}</div>
+          ${o.memo?`<div class="dmemo">📝 ${o.memo}</div>`:''}
+          <div class="dtrow"><span class="dtlbl">TOTAL</span><span class="dtval">${o.total.toLocaleString()}원</span></div>
+          <div class="d-act">
+            <button class="ddel" onclick="delOne('${o._key}');closeM()">삭제</button>
+            <button class="dcls" onclick="closeM()">닫기</button>
+          </div>
         </div>
-        ${o.memo?`<div class="dmemo">📝 ${o.memo}</div>`:''}
-        <div class="dtrow"><span class="dtlbl">TOTAL</span><span class="dtval">${o.total.toLocaleString()}원</span></div>
-        <div class="d-act">
-          <button class="ddel" onclick="delOne('${o._key}');closeM()">삭제</button>
-          <button class="dcls" onclick="closeM()">닫기</button>
-        </div>
-      </div>
-    </div>`;
+      </div>`;
+  };
+  window.clearOrders=async function(){
+    if(!orders.length)return;
+    if(confirm('주문 내역을 전부 삭제할까요?')){await remove(ordersRef);}
+  };
+  window.resetOrder=function(){
+    all().forEach(m=>{qty[m.id]=0;});
+    setO=[];sel=null;
+    document.getElementById('tbl-cur').textContent='테이블 선택';
+    document.getElementById('tbl-btn').className='tbl-btn';
+    document.getElementById('memo').value='';
+    buildCatGrid();updSumm();
+  };
+
+  buildCatGrid();
 };
 
-window.clearOrders=async function(){
-  if(!orders.length)return;
-  if(confirm('주문 내역을 전부 삭제할까요?')){await deleteAllOrders();}
-};
-
-window.resetOrder=function(){
-  all().forEach(m=>{qty[m.id]=0;});
-  setO=[];sel=null;
-  document.getElementById('tbl-cur').textContent='테이블 선택';
-  document.getElementById('tbl-btn').className='tbl-btn';
-  document.getElementById('memo').value='';
-  buildCatGrid();updSumm();
-};
-
-buildCatGrid();
+// initApp 호출 시 Firebase 모듈 실행
+window.initApp = function(){ window._firebaseReady(); };
+if(document.getElementById('main-app').style.display==='block'){ window._firebaseReady(); }
 </script>
 </body>
 </html>
